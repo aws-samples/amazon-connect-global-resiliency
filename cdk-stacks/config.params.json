@@ -1,0 +1,60 @@
+{
+    "CdkAppName": "ConnectGRAdmin",
+    "CdkBackendStack": "ConnectGlobalResiliencyAdminBackend",
+    "CdkFrontendStack": "ConnectGlobalResiliencyAdminFrontend",
+    "CdkPipelineStack": "ConnectGlobalResiliencyAdminPipeline",
+    "WebAppRootPrefix": "WebAppRoot/",
+    "WebAppStagingPrefix": "WebAppStaging/",
+    "hierarchy": "/ConnectGlobalResiliencyAdmin/",
+    "parameters": [
+        {
+            "name": "cognitoDomainPrefix",
+            "cliFormat": "cognito-domain-prefix",
+            "description": "Amazon Cognito hosted UI domain prefix, where users will be redirected during the login process. The domain prefix has to be unique.  It can include only lowercase letters, numbers, and hyphens. Do not use a hyphen for the first or last character. Use periods to separate subdomain names. You can't use the text aws, amazon, or cognito in the domain prefix.",
+            "required": true
+        },
+        {
+            "name": "webappAPIAllowedOrigins",
+            "cliFormat": "webapp-api-allowed-origins",
+            "description": "Please provide the domain of your web application, to allow CORS. For example: https://aaaabbbbcccc.cloudfront.net",
+            "defaultValue": "*",
+            "required": true
+        },
+        {
+            "name": "cognitoSAMLEnabled",
+            "cliFormat": "cognito-saml-enabled",
+            "description": "If SSO/SAML is enabled, set to true, otherwise set to false",
+            "defaultValue": false,
+            "required": true,
+            "boolean": true
+        },
+        {
+            "name": "cognitoSAMLIdentityProviderURL",
+            "cliFormat": "cognito-saml-identity-provider-url",
+            "description": "If SSO/SAML was enabled, please provide IdP Metadata URL. For example: https://portal.sso.{region}.amazonaws.com/saml/metadata/aaabbbcccdddeee",
+            "required": true,
+            "parent": "cognitoSAMLEnabled"
+        },
+        {
+            "name": "cognitoSAMLIdentityProviderName",
+            "cliFormat": "cognito-saml-identity-provider-name",
+            "description": "If SSO/SAML was enabled, please provide the Identity Provide name. For example: AWSSSO",
+            "required": true,
+            "parent": "cognitoSAMLEnabled"
+        },
+        {
+            "name": "cognitoSAMLCallbackUrls",
+            "cliFormat": "cognito-saml-callback-urls",
+            "description": "If SSO/SAML was enabled, please provide a callback URL for the Amazon Cognito authorization server to call after users are authenticated. This should be set to your application root URL. For example: https://aaaabbbbcccc.cloudfront.net",
+            "required": true,
+            "parent": "cognitoSAMLEnabled"
+        },
+        {
+            "name": "cognitoSAMLLogoutUrls",
+            "cliFormat": "cognito-saml-logout-urls",
+            "description": "If SSO/SAML was enabled, please provide a logout URL where user is to be redirected after logging out.",
+            "required": true,
+            "parent": "cognitoSAMLEnabled"
+        }
+    ]
+}

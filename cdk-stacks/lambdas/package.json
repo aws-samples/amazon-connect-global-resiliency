@@ -1,0 +1,21 @@
+{
+  "name": "lambdas",
+  "version": "1.0.0",
+  "description": "Amazon Connect Global Resiliency starter project",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "esbuild handlers/*.js --bundle --external:aws-sdk --outdir=build --target=node16 --platform=node"
+  },
+  "author": "prod-apps-builder-team",
+  "license": "MIT-0",
+  "devDependencies": {
+    "aws-sdk": "^2.1212.0",
+    "esbuild": "^0.15.7",
+    "eslint": "^8.23.0"
+  },
+  "dependencies": {
+  }
+}

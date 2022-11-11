@@ -1,0 +1,11 @@
+{
+  "name": "aws-sdk-lambda-layer",
+  "version": "0.0.1",
+  "description": "Amazon Connect Global Resiliency starter project - lambda layer",
+  "scripts": {},
+  "author": "prod-apps-builder-team",
+  "license": "MIT-0",
+  "dependencies": {
+    "aws-sdk": "^2.1236.0"
+  }
+}

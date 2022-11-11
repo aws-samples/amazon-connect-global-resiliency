@@ -1,0 +1,16 @@
+/*
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: MIT-0
+ */
+
+.App {
+  #text-align: center;
+}
+
+td {
+  font-size: 13px !important
+}
+
+body {
+  font-size: 14px !important
+}
