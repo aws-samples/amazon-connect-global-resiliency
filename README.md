@@ -107,6 +107,7 @@ These instructions assume you have completed all the prerequisites, and you have
     - This script builds frontend applications (webapp)
     - If you have started with a new environment, please bootstrap CDK: `cdk bootstrap`
     - Run the script: `npm run cdk:deploy`
+      - **On Windows devices use `npm run cdk:deploy:gitbash`**.
     - This script deploys CDK stacks
     - Wait for all resources to be provisioned before continuing to the next step
     - AWS CDK output will be provided in your Terminal. You should see the Amazon Cognito User Pool Id as `userPoolId` from your Backend stack, 
@@ -132,6 +133,7 @@ These instructions assume you have completed all the prerequisites, and you have
         - webapp-api-allowed-origins: Domain of your agent application, in this case Amazon CloudFront Distribution URL. For instance: `https://aaaabbbbcccc.cloudfront.net`
     - The script stores the deployment parameters to AWS System Manager Parameter Store
     - While in `amazon-connect-global-resiliency/cdk-stacks`, run the deploy script: `npm run cdk:deploy`
+      - **On Windows devices use `npm run cdk:deploy:gitbash`**.
     - Wait for the CDK stacks to be updated
 
 
