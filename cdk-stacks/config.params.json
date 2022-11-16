@@ -56,5 +56,9 @@
             "required": true,
             "parent": "cognitoSAMLEnabled"
         }
-    ]
+    ],
+    "tags": {
+        "project": "Amazon Connect Global Resiliency Dashboard starter project",
+        "os-code-source": "https://github.com/aws-samples/amazon-connect-global-resiliency"
+    }
 }

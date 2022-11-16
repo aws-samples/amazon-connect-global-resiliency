@@ -362,7 +362,7 @@ const ManageNumbers = () => {
             disableRowSelect={!currentConnectInstance.PrimaryReplica}
           />
           <Text>
-            Note: You can only Release 25 numbers at a time.  If you need to Release numbers in bulk, please consider using the <a target='_blank' rel='noreferrer' href='https://docs.aws.amazon.com/connect/latest/APIReference/API_UpdatePhoneNumber.html'>API</a> directly.
+            You can only reassign or release 25 numbers at a time from the dashboard.  If you need to manage numbers in bulk, please consider using the <a target='_blank' rel='noreferrer' href='https://docs.aws.amazon.com/connect/latest/APIReference/API_UpdatePhoneNumber.html'>API</a> directly.
           </Text>
         </Box> 
     }
@@ -389,7 +389,7 @@ const ManageNumbers = () => {
           />
           <Text>
             NOTE: to claim a new phone number to use in your TDG use the standard Amazon Connect console, and then reassign it here.<br />
-            You can only Assign 25 numbers at a time.  If you need to Assign numbers in bulk, please consider using the <a target='_blank' rel='noreferrer' href='https://docs.aws.amazon.com/connect/latest/APIReference/API_UpdatePhoneNumber.html'>API</a> directly.
+            You can only reassign or release 25 numbers at a time from the dashboard.  If you need to manage numbers in bulk, please consider using the <a target='_blank' rel='noreferrer' href='https://docs.aws.amazon.com/connect/latest/APIReference/API_UpdatePhoneNumber.html'>API</a> directly.
           </Text>
         </Box>
       })

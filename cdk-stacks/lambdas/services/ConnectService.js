@@ -8,13 +8,8 @@ import pairedRegionMap from '../constants/PairedRegions'
 const currentRegion = process.env.AWS_REGION
 const pairedRegion = pairedRegionMap[currentRegion]
 
-const customBackoff = (retryCount) => {
-	const timeToWait = 2 ** (retryCount+1) * 1000;
-	const jitter = Math.floor(Math.random() * (1000 - 100 + 1) + 100)
-	const waitWithJitter = timeToWait + jitter
-	console.debug(`retry count: ${retryCount}, timeToWait: ${timeToWait}, jitter: ${jitter} waiting: ${waitWithJitter}ms`)
-	return waitWithJitter
-}
+import tags from '../constants/Tags'
+import customBackoff from '../lib/CommonUtility'
 
 const Connect = new ConnectClient({
 	maxRetries: 3,
@@ -118,19 +113,12 @@ const listTrafficDistributionGroups = async (instanceId, maxResults, nextToken) 
 	return connectResult;
 }
 
-const createTrafficDistributionGroup = async (name, description, instanceId) => {
-	const params = {
-		Name: name,
-		Description: description,
-		InstanceId: instanceId,
-		// "ClientToken": "string",
-		// "Tags": {
-		//     "Key": "string",
-		//     "Value": "string"
-		// }
-	}
+const createTrafficDistributionGroup = async (trafficDistributionGroupDetails) => {
 
-	const connectResult = await Connect.createTrafficDistributionGroup(params).promise().catch(error => {
+	//Add in tags, tags passed in will overwrite the standard hardcoded project tags
+	trafficDistributionGroupDetails.Tags = {...tags, ...trafficDistributionGroupDetails.Tags}
+
+	const connectResult = await Connect.createTrafficDistributionGroup(trafficDistributionGroupDetails).promise().catch(error => {
 		console.error('Connect.createTrafficDistributionGroup: ', error);
 		throw new ErrorHandler(error.statusCode, error.message);
 	});

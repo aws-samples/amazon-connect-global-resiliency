@@ -13,8 +13,14 @@ export const connectListInstances = async () => {
     },
   })
     .catch(error => {
-      console.error('Connect List Instances >>', error.response)
-      throw new Error(`${error.response.data.message}`)
+      if(error.message === 'Network Error'){
+        console.error('Connect List Instances >>', error)
+        throw new Error('There was a network error. If the issue is CORS policy, check your API Gateway allowed origins.')
+      }
+      else {
+        console.error('Connect List Instances >>', error.response)
+        throw new Error(`${error.response.data.message}`)
+      }
     })
 
   //Add formatted date as additional attribute
@@ -25,6 +31,7 @@ export const connectListInstances = async () => {
       } })
   }
   catch (error) {
+    console.debug('Issue formatting creation date')
     //continue, date will  be missing on table, but don't block the API response because of that
   }
 
@@ -75,9 +82,9 @@ export const connectCreateTrafficDistributionGroup = async (name, description, i
       Authorization: cid,
     },
     body: {
-      name,
-      description,
-      instanceId
+      'Name': name,
+      'Description': description,
+      'InstanceId': instanceId
     }
   })
     .catch(error => {

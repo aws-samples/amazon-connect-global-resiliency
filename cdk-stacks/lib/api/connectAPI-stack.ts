@@ -166,7 +166,8 @@ export class ConnectAPIStack extends NestedStack {
             statements: [
                 new iam.PolicyStatement({
                     effect: iam.Effect.ALLOW,
-                    actions: ["connect:CreateTrafficDistributionGroup"],
+                    actions: ["connect:CreateTrafficDistributionGroup",
+                        "connect:TagResource"],
                     resources: ['*']
                 })
             ]

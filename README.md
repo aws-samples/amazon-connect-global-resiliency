@@ -147,7 +147,7 @@ These instructions assume you have completed all the prerequisites, and you have
 9. Deploy your solution into the second region
    - Switch the region either in your profile or alternatively in your CLI using `export AWS_DEFAULT_REGION=<<desiredregion>>`
    - You can confirm the configured region with  
-        `aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]'`- 
+        `aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]'`
    - Rerun steps 4-8 to deploy into the second region
    
 
@@ -180,7 +180,7 @@ You take full ownership and responsibility for the code running in your environm
 - The starter project uses Cognito user pools, but you may want to consider using Cognito identity pools (federated identities) to connect it to your current identity providers.
 - If you decide to use Cognito, you will want to check the password policy matches your expectations and you may want to enable MFA. 
 - The starter project only provides access through Cloudfront, you will likely want to integrate it with a firewall like AWS WAF, and should verify if any restrictions should be added to your Cloudfront distribution (e.g. geo restrictions).
-- The starter project does not currently have tags on any resources
+- The starter project tags all resources with the tags listed in `cdk-stacks/config.params.json` and anything created through the dashboard has the tags in `cdk-stacks/lambdas/constants/Tags.js` added. You may wish to replace them with your own company requirements, or tag at a more granular level.
 
 
 

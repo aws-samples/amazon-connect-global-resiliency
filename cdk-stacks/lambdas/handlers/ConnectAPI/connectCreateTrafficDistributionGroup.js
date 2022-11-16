@@ -13,7 +13,7 @@ exports.handler = async (event, context) => {
 		console.info(`Current user: `, currentUser);
 
 		const req = LambdaUtility.parseEventBody(event);
-		const connectCreateTDGResult = await ConnectService.createTrafficDistributionGroup(req.body['name'], req.body['description'], req.body['instanceId']);
+		const connectCreateTDGResult = await ConnectService.createTrafficDistributionGroup(req.body);
 		console.info('Connect Create TDG Result: ', connectCreateTDGResult);
 		return LambdaUtility.buildLambdaResponse(context, 200, { success: 'Connect Create Traffic Distribution Group succeeded!', data: connectCreateTDGResult });
 	}

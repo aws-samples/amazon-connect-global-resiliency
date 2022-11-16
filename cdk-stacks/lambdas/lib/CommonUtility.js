@@ -34,9 +34,19 @@ const wait = (time) => {
     });
 }
 
+const customBackoff = (retryCount) => {
+    const timeToWait = 2 ** (retryCount+1) * 1000;
+    const jitter = Math.floor(Math.random() * (1000 - 100 + 1) + 100)
+    const waitWithJitter = timeToWait + jitter
+    console.debug(`retry count: ${retryCount}, timeToWait: ${timeToWait}, jitter: ${jitter} waiting: ${waitWithJitter}ms`)
+    return waitWithJitter
+}
+
+
 module.exports = {
     uuid,
     validateEmailAddress,
     makeComparator,
-    wait
+    wait,
+    customBackoff
 }
