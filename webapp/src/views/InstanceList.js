@@ -10,6 +10,7 @@ import Container from 'aws-northstar/layouts/Container'
 import Inline from 'aws-northstar/layouts/Inline'
 import Table from 'aws-northstar/components/Table'
 import Text from 'aws-northstar/components/Text'
+import Link from 'aws-northstar/components/Link'
 
 import {connectListInstances} from '../apis/connectAPI'
 import routes from '../constants/routes'
@@ -58,7 +59,8 @@ const InstanceList = () => {
       id: 'id',
       Header: 'Alias',
       accessor: 'InstanceAlias',
-      width: 300
+      width: 300,
+      Cell: e =><Link href={`instance/${e.row.id}`}>{e.value}</Link>
     },
     {
       id: 'status',

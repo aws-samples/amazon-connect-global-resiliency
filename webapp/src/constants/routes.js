@@ -4,8 +4,8 @@
 const routes = {
   HOME: '/',
   INSTANCE: '/instance',
-  TRAFFIC_DISTRIBUTION_GROUP: '/instance/:instanceId?/trafficDistributionGroup',
-  MANAGE_PHONE_NUMBERS: '/instance/:instanceId?/trafficDistributionGroup/:trafficDistributionGroupId?/manageNumbers',
+  TRAFFIC_DISTRIBUTION_GROUP: '/instance/:instanceId?/trafficdistributiongroup',
+  MANAGE_PHONE_NUMBERS: '/instance/:instanceId?/trafficdistributiongroup/:tdgId?/manageNumbers',
 }
 
 export default routes

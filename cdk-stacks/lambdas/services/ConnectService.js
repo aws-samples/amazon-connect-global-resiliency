@@ -176,19 +176,61 @@ const listPhoneNumbers = async (listPhoneNumberParams) => {
 }
 
 
-const updatePhoneNumber = async (targetArn, phoneNumberId) => {
-	const params = {
-		PhoneNumberId: phoneNumberId,
-		TargetArn: targetArn,
-		//ClientToken: ''
+const updatePhoneNumbers = async (targetArn, phoneNumberIds) => {
+
+	if (phoneNumberIds.length > 25){
+		throw new ErrorHandler('400', `Only 25 phoneNumberIds are accepted, ${phoneNumberIds.length} were passed.`);
+	} else {
+		try{
+			let response = [];
+			let successCnt = 0;
+			let errorCnt = 0;
+
+			for (let index = 0; index < phoneNumberIds.length; index++) {
+				const phoneNumberId = phoneNumberIds[index];
+				const params = {
+					PhoneNumberId: phoneNumberId,
+					TargetArn: targetArn,
+				}
+			
+				const connectUpdatePhoneNumbersResult = await Connect.updatePhoneNumber(params).promise().catch(error => {
+					console.error('Connect.updatePhoneNumber: ', error);
+					response.push({
+						message: 'error',
+						resource: {
+							phoneNumberId: phoneNumberId,
+							error: error
+						},
+						status: 500
+					})
+					errorCnt++;
+				});
+
+				console.debug('Connect Update Phone Numbers Result: ', connectUpdatePhoneNumbersResult);
+				response.push({
+					message: 'success',
+					resource: {
+						phoneNumberId: phoneNumberId
+					},
+					status: 200
+				})
+				successCnt++;
+			}
+		
+			// Following format from https://stackoverflow.com/questions/45442847/rest-api-response-in-partial-success
+			return { 
+				data: response,
+				metadata: {
+					failure: errorCnt,
+					success: successCnt,
+					total: phoneNumberIds.length
+				}
+			};
+		} catch (err){
+			console.error('Connect.updatePhoneNumber: ', err);
+			throw new ErrorHandler(err.statusCode, err.message);
+		}
 	}
-
-	const connectResult = await Connect.updatePhoneNumber(params).promise().catch(error => {
-		console.error('Connect.listPhoneNumbersV2: ', error);
-		throw new ErrorHandler(error.statusCode, error.message);
-	});
-
-	return connectResult;
 }
 
 const deleteTrafficDistributionGroup = async (trafficDistributionGroupId) => {
@@ -213,7 +255,7 @@ module.exports = {
 	getTrafficDistribution,
 	createTrafficDistributionGroup,
 	listPhoneNumbers,
-	updatePhoneNumber,
+	updatePhoneNumbers,
 	updateTrafficDistribution,
 	deleteTrafficDistributionGroup
 }

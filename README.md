@@ -23,6 +23,8 @@ The dashboard provides screens that let you navigate through and replicate your 
 
 ![instance overview screen](documentation/images/instance-overview-screen.png)
 
+> **Tip:** You can create bookmarks to the manage traffic distribution group screens.  This allows you to quickly navigate to a specific traffic distribution group when needed.
+
 
 ### Key limitations
 - Once an instance has been replicated it will be empty. You will need to use the AWS Console (and Amazon Connect console) to configure it..

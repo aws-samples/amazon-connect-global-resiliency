@@ -108,7 +108,8 @@ function App({ isFederateLogin, isFederateLogout }) {
                       availableRoutes={[
                         { path: '/', exact: true, strict: true },
                         { path: '/instance/:instanceId', exact: true, strict: false },
-                        { path: '/instance/:instanceId/trafficDistributionGroup/:tdgId', exact: true, strict: false }
+                        { path: '/instance/:instanceId/trafficdistributiongroup/:tdgId', exact: true, strict: false },
+                        { path: '/instance/:instanceId/trafficdistributiongroup/:tdgId/managenumbers', exact: true, strict: false }
                       ]}
                     />
             }

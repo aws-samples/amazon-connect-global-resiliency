@@ -25,12 +25,12 @@ import Container from 'aws-northstar/layouts/Container'
 import Inline from 'aws-northstar/layouts/Inline'
 
 import ConfirmationModal from '../components/ConfirmationModal'
-import { connectShowTrafficDistributionGroup, connectUpdateTrafficDistribution } from '../apis/connectAPI'
+import { connectShowTrafficDistributionGroup, connectUpdateTrafficDistribution, connectListTrafficDistributionGroups, connectShowInstance } from '../apis/connectAPI'
 import { useAppState } from '../providers/AppStateProvider'
 
 const TrafficDistributionGroup = () => {
   const { tdgId, instanceId } = useParams()
-  const { pushNotificationItem, currentConnectInstance, currentTDG,setCurrentTDG } = useAppState()
+  const { pushNotificationItem, currentConnectInstance, setCurrentConnectInstance, currentTDG,setCurrentTDG } = useAppState()
   const history = useHistory()
   const confirmationModalRef = useRef(null)
 
@@ -59,16 +59,41 @@ const TrafficDistributionGroup = () => {
 
   useEffect(async () => {
     if (currentTDG.Arn) {
-      await showTDG()
+      await showTDG(currentTDG.Arn)
     }
-    else if(instanceId) {
-      history.replace(`/instance/${instanceId}`)
+    else if(instanceId && tdgId) {
+      //page refresh or direct link - need to fetch tdgs so we can find the ARN of the given tdg.Id as ids are the same across regions
+      setLoading(true)
+      try {
+        const connectShowInstanceResult = await connectShowInstance(instanceId)
+        setCurrentConnectInstance(connectShowInstanceResult)
+        console.debug('connectShowInstanceResult', connectShowInstanceResult)
+
+        const connectListTrafficDistributionGroupsResult = await connectListTrafficDistributionGroups(instanceId)
+        console.debug('listTrafficDistributionGroups', connectListTrafficDistributionGroupsResult)
+        const foundTdg = connectListTrafficDistributionGroupsResult.find(x => x.Id === tdgId)
+        if (foundTdg){
+          await showTDG(foundTdg.Arn)
+        } else {
+          throw new Error('Unknown Traffic Distribution Group.')
+        }
+        
+
+      } catch (error) {
+        console.error('error calling retrieving instance or traffic distribution groups', error)
+        setLoading(false)
+        pushNotificationItem({
+          header: 'There was an error loading the instance or traffic distribution groups',
+          content: error.message,
+          type: 'error',
+          dismissible: true,
+        })
+      }
     }
     else {
-      console.error('No tdgId passed in URL')
+      console.error('No instanceId or tdgId passed in URL')
       //If the params are missing in the URL navigate back to Home
       history.replace('/')
-
     }
 
   }, [])
@@ -80,27 +105,39 @@ const TrafficDistributionGroup = () => {
   /**
    * Show traffic distribution group
    */
-  const showTDG = async () => {
+  const showTDG = async (arn) => {
     console.debug('show TDG:', currentTDG)
-    setLoading(true)
-    const connectShowTrafficDistributionGroupResult = await connectShowTrafficDistributionGroup(currentTDG.Arn)
-    console.debug(connectShowTrafficDistributionGroupResult)
-    const td = connectShowTrafficDistributionGroupResult.TrafficDistributionGroup
-    setTDG(td)
-    setCurrentTDG(td)
+    try{
+      setLoading(true)
+      const connectShowTrafficDistributionGroupResult = await connectShowTrafficDistributionGroup(arn)
+      console.debug(connectShowTrafficDistributionGroupResult)
+      const td = connectShowTrafficDistributionGroupResult.TrafficDistributionGroup
+      setTDG(td)
+      setCurrentTDG(td)
 
-    td.TrafficDistribution.TelephonyConfig.Distributions.forEach((dist, index) => {
-      if(index === 0){
-        setRegion1(dist.Region)
-        setRegion1Pct(dist.Percentage)
-        setRegion1SelectPct(pctOptions.find(o => o.value === dist.Percentage + ''))
-      } else {
-        setRegion2(dist.Region)
-        setRegion2Pct(dist.Percentage)
-      }
-    })
+      td.TrafficDistribution.TelephonyConfig.Distributions.forEach((dist, index) => {
+        if(index === 0){
+          setRegion1(dist.Region)
+          setRegion1Pct(dist.Percentage)
+          setRegion1SelectPct(pctOptions.find(o => o.value === dist.Percentage + ''))
+        } else {
+          setRegion2(dist.Region)
+          setRegion2Pct(dist.Percentage)
+        }
+      })
 
-    setLoading(false)
+      setLoading(false)
+    }
+    catch (error){
+      console.error('error retrieving traffic distribution group', error)
+      setLoading(false)
+      pushNotificationItem({
+        header: 'There was an error loading the traffic distribution group',
+        content: error.message,
+        type: 'error',
+        dismissible: true,
+      })
+    }
   }
 
   const submitTDGForm = async (formFields) => {
@@ -113,9 +150,10 @@ const TrafficDistributionGroup = () => {
     setLoading(true)
 
     const td = tdg.TrafficDistribution
+    const tdArn = td.Arn
 
     //Need to swap out the Id for ARN as that works in both regions.
-    td.Id = td.Arn
+    td.Id = tdArn
 
     // remove ARN as Update doesn't like it.
     delete td.Arn
@@ -136,7 +174,7 @@ const TrafficDistributionGroup = () => {
         type: 'success',
         dismissible: true,
       })
-      await showTDG()
+      await showTDG(tdArn)
     } catch (error) {
       pushNotificationItem({
         header: 'There was an error updating the traffic distribution',

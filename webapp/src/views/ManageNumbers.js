@@ -15,12 +15,14 @@ import Text from 'aws-northstar/components/Text'
 import {useAppState} from '../providers/AppStateProvider'
 import {
   connectListPhoneNumbers,
-  connectUpdatePhoneNumbers
+  connectUpdatePhoneNumbers,
+  connectShowInstance,
+  connectListTrafficDistributionGroups
 } from '../apis/connectAPI'
 
 const ManageNumbers = () => {
-  const { instanceId } = useParams()
-  const { currentConnectInstance, currentTDG, pushNotificationItem } = useAppState()
+  const { instanceId, tdgId } = useParams()
+  const { currentConnectInstance, setCurrentConnectInstance, currentTDG, setCurrentTDG, pushNotificationItem } = useAppState()
   const history = useHistory()
 
   const [loading, setLoading] = useState(false)
@@ -41,12 +43,47 @@ const ManageNumbers = () => {
     if (currentConnectInstance?.Arn && currentTDG?.Arn) {
       await refreshPhoneNumbers()
     }
-    // If the instance and TDG data is not loaded then redirect back to the instance page
-    // In the future, calls could be made based on the ids in the URL to re-populate these
-    else if (instanceId) {
-      history.replace(`/instance/${instanceId}`)
+    else if(instanceId && tdgId) {
+      //page refresh or direct link - need to fetch tdgs so we can find the ARN of the given tdg.Id as ids are the same across regions
+      setLoading(true)
+      try {
+        const connectShowInstanceResult = await connectShowInstance(instanceId)
+        setCurrentConnectInstance(connectShowInstanceResult)
+        console.debug('connectShowInstanceResult', connectShowInstanceResult)
+
+        //Only load in instance numbers if the user will be able to view and use them
+        if (connectShowInstanceResult.PrimaryReplica) {
+          const listInstancePhoneNumberResponse = await listPhoneNumbers(connectShowInstanceResult.Arn)
+          setPhoneNumbersAssociatedToInstance(listInstancePhoneNumberResponse)
+        }
+
+        const connectListTrafficDistributionGroupsResult = await connectListTrafficDistributionGroups(instanceId)
+        console.debug('listTrafficDistributionGroups', connectListTrafficDistributionGroupsResult)
+        const foundTdg = connectListTrafficDistributionGroupsResult.find(x => x.Id === tdgId)
+        if (foundTdg){
+          setCurrentTDG(foundTdg)
+          const listTDGPhoneNumberResponse = await listPhoneNumbers(foundTdg.Arn)
+          setPhoneNumbersAssociatedToTDG(listTDGPhoneNumberResponse)
+  
+          setLoading(false)
+        } else {
+          throw new Error('Unknown Traffic Distribution Group.')
+        }
+
+      } catch (error) {
+        console.error('error calling retrieving instance or traffic distribution groups', error)
+        setLoading(false)
+        pushNotificationItem({
+          header: 'There was an error loading the instance or traffic distribution groups',
+          content: error.message,
+          type: 'error',
+          dismissible: true,
+        })
+      }
     }
     else {
+      console.error('No instanceId or tdgId passed in URL')
+      //If the params are missing in the URL navigate back to Home
       history.replace('/')
     }
 
@@ -56,16 +93,28 @@ const ManageNumbers = () => {
     setLoading(true)
     await sleep(delay)
 
-    const listTDGPhoneNumberResponse = await listPhoneNumbers(currentTDG.Arn)
-    setPhoneNumbersAssociatedToTDG(listTDGPhoneNumberResponse)
+    try{
+      const listTDGPhoneNumberResponse = await listPhoneNumbers(currentTDG.Arn)
+      setPhoneNumbersAssociatedToTDG(listTDGPhoneNumberResponse)
 
-    //Only load in instance numbers if the user will be able to view and use them
-    if (currentConnectInstance.PrimaryReplica) {
-      const listInstancePhoneNumberResponse = await listPhoneNumbers(currentConnectInstance.Arn)
-      setPhoneNumbersAssociatedToInstance(listInstancePhoneNumberResponse)
+      //Only load in instance numbers if the user will be able to view and use them
+      if (currentConnectInstance.PrimaryReplica) {
+        const listInstancePhoneNumberResponse = await listPhoneNumbers(currentConnectInstance.Arn)
+        setPhoneNumbersAssociatedToInstance(listInstancePhoneNumberResponse)
+      }
+
+      setLoading(false)
     }
-
-    setLoading(false)
+    catch (error){
+      console.error('error retrieving phone numbers', error)
+      setLoading(false)
+      pushNotificationItem({
+        header: 'There was an error retrieving phone numbers',
+        content: error.message,
+        type: 'error',
+        dismissible: true,
+      })
+    }
   }
 
   const listPhoneNumbers = async (arn) => {

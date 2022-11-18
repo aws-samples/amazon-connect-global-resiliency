@@ -33,7 +33,9 @@ import {
   Table,
   Text,
   validatorTypes,
+  Link
 } from 'aws-northstar'
+
 import ConfirmationModal from '../components/ConfirmationModal'
 
 const Instance = () => {
@@ -83,7 +85,15 @@ const Instance = () => {
 
   const onTdgSelectionChange = async (index) => {
     if (trafficDistributionGroups && index.length > 0) {
-      selectedTdg = trafficDistributionGroups[index]
+      selectedTdg = trafficDistributionGroups.find(x => x.Id === index[0])
+    }
+  }
+
+  const onTdgClick = async (id) => {
+    if (trafficDistributionGroups && id) {
+      selectedTdg = trafficDistributionGroups.find(x => x.Id === id)
+      setCurrentTDG(selectedTdg)
+      history.replace(`/instance/${instanceId}/trafficdistributiongroup/${id}/`)
     }
   }
 
@@ -251,6 +261,7 @@ const Instance = () => {
    * Traffic distribution group table and actions
    */
 
+  const getRowId = React.useCallback(data => data.Id, [])
   const listTDG = async () => {
     console.debug('listTrafficDistributionGroups')
     setTDGLoading(true)
@@ -280,7 +291,8 @@ const Instance = () => {
       id: 'Name',
       Header: 'Name',
       accessor: 'Name',
-      width: 200
+      width: 200,
+      Cell: e =><Link onClick={() => onTdgClick(e.row.id)} href='#'>{e.value}</Link>
     },
     {
       id: 'Id',
@@ -452,6 +464,7 @@ const Instance = () => {
             items={trafficDistributionGroups}
             wrapText={true}    
             onSelectedRowIdsChange={onTdgSelectionChange}
+            getRowId={getRowId}
             loading={tdgLoading}
             disableSettings = {true}
           />
