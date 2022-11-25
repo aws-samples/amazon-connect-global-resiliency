@@ -175,7 +175,7 @@ Although the code has been written with best practices in mind, your own company
 
 You take full ownership and responsibility for the code running in your environment, and are free to make whatever changes you need to.
 
->It is critical that you test this solution once deployed AND incorporate frequent failover tests throughout the year as part of your organization's larger Disaster Recovery Drills.
+>It is critical that you test this solution once deployed AND incorporate frequent failover tests (monthly or at least quarterly) as part of your organization's larger Disaster Recovery Drills. You can find more information on general best practices for a failover runbook for Amazon Connect Global Resiliency [here](https://catalog.workshops.aws/amazon-connect-global-resiliency/en-US/connectbestpractices#failover-runbook).
 
 **Some of the things you will want to consider**
 - The starter project has extensive logging to CloudWatch, but does not have any monitoring or tracing included, you may want to look at using tools like Cloudwatch Alarms and X-ray.
