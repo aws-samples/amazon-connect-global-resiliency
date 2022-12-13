@@ -1,6 +1,6 @@
 {
   "name": "webapp",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Amazon Connect Global Resiliency starter project",
   "main": "index.js",
   "scripts": {

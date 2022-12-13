@@ -1,6 +1,6 @@
 {
   "name": "cdk-stacks",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Amazon Connect Global Resiliency starter project",
   "main": "configure.js",
   "scripts": {
