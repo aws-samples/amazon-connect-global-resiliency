@@ -12,7 +12,7 @@
   "author": "prod-apps-builder-team",
   "license": "MIT-0",
   "devDependencies": {
-    "aws-sdk": "^2.1212.0",
+    "aws-sdk": "^2.1354.0",
     "esbuild": "^0.15.7",
     "eslint": "^8.23.0"
   },
