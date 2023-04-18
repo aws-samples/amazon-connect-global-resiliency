@@ -6,6 +6,6 @@
   "author": "prod-apps-builder-team",
   "license": "MIT-0",
   "dependencies": {
-    "aws-sdk": "^2.1236.0"
+    "aws-sdk": "^2.1360.0"
   }
 }
