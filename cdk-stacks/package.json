@@ -34,7 +34,7 @@
   "author": "prod-apps-builder-team",
   "license": "MIT-0",
   "devDependencies": {
-    "@aws-sdk/client-ssm": "^3.350.0",
+    "@aws-sdk/client-ssm": "^3.405.0",
     "@types/node": "^18.7.16",
     "aws-cdk": "^2.50.0",
     "esbuild": "^0.15.7",
