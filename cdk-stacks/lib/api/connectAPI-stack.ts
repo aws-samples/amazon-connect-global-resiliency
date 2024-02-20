@@ -45,7 +45,7 @@ export class ConnectAPIStack extends NestedStack {
         // this layer is only needed until the 2.1236 (or higher) version of aws-sdk is in the lambda runtime https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
         const awsSdkLayer = new lambda.LayerVersion(this, 'awsSdkLayer', {
             code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda-layer')),
-            compatibleRuntimes: [lambda.Runtime.NODEJS_16_X],
+            compatibleRuntimes: [lambda.Runtime.NODEJS_20_X],
             description: 'The AWS SDK version required for the new Global Resiliency apis',
         });
 
@@ -62,7 +62,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectListInstancesLambda = new nodeLambda.NodejsFunction(this, 'ConnectListInstancesLambda', {
             functionName: `${props.cdkAppName}-ConnectListInstancesLambda`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectListInstances.js',
             timeout: Duration.seconds(30),
             memorySize: 512,
@@ -82,7 +82,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectShowInstanceLambda = new nodeLambda.NodejsFunction(this, 'connectShowInstanceLambda', {
             functionName: `${props.cdkAppName}-ConnectShowInstanceLambda`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectShowInstance.js',
             timeout: Duration.seconds(30),
             memorySize: 512,
@@ -101,7 +101,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectReplicateInstanceLambda = new nodeLambda.NodejsFunction(this, 'connectReplicateInstanceLambdaPolicy', {
             functionName: `${props.cdkAppName}-ConnectReplicateInstanceLambda`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectReplicateInstance.js',
             timeout: Duration.seconds(30),
             memorySize: 512,
@@ -155,7 +155,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectCreateTrafficDistributionGroupLambda = new nodeLambda.NodejsFunction(this, 'connectCreateTrafficDistributionGroupLambda', {
             functionName: `${props.cdkAppName}-connectCreateTrafficDistributionGroupLambda`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectCreateTrafficDistributionGroup.js',
             timeout: Duration.seconds(30),
             memorySize: 512,
@@ -176,7 +176,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectListTrafficDistributionGroupsLambda = new nodeLambda.NodejsFunction(this, 'connectListTrafficDistributionGroupsLambda', {
             functionName: `${props.cdkAppName}-connectListTrafficDistributionGroupsLambda`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectListTrafficDistributionGroups.js',
             timeout: Duration.seconds(30),
             memorySize: 512,
@@ -195,7 +195,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectShowTrafficDistributionGroupLambda = new nodeLambda.NodejsFunction(this, 'connecShowTrafficDistributionGroupLambda', {
             functionName: `${props.cdkAppName}-connectShowTrafficDistributionGroupLambda`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectShowTrafficDistributionGroup.js',
             timeout: Duration.seconds(30),
             memorySize: 512,
@@ -214,7 +214,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectUpdateTrafficDistributionLambda = new nodeLambda.NodejsFunction(this, 'connectUpdateTrafficDistribution', {
             functionName: `${props.cdkAppName}-connectUpdateTrafficDistribution`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectUpdateTrafficDistribution.js',
             timeout: Duration.seconds(30),
             memorySize: 512,
@@ -233,7 +233,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectListPhoneNumbersLambda = new nodeLambda.NodejsFunction(this, 'ConnectListPhoneNumbersLambda', {
             functionName: `${props.cdkAppName}-ConnectListPhoneNumbersLambda`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectListPhoneNumbers.js',
             layers: [awsSdkLayer],
             timeout: Duration.seconds(30),
@@ -252,7 +252,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectUpdatePhoneNumbersLambda = new nodeLambda.NodejsFunction(this, 'connectUpdatePhoneNumbers', {
             functionName: `${props.cdkAppName}-connectUpdatePhoneNumbers`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectUpdatePhoneNumbers.js',
             timeout: Duration.seconds(50), //Setting this a bit larger as we are going to loop through several updates
             memorySize: 512,
@@ -263,7 +263,7 @@ export class ConnectAPIStack extends NestedStack {
             statements: [
                 new iam.PolicyStatement({
                     effect: iam.Effect.ALLOW,
-                    actions: ["connect:UpdatePhoneNumber"], 
+                    actions: ["connect:UpdatePhoneNumber"],
                     resources: ['*']
                 })
             ]
@@ -271,7 +271,7 @@ export class ConnectAPIStack extends NestedStack {
 
         const connectDeleteTrafficDistributionGroupLambda = new nodeLambda.NodejsFunction(this, 'connectDeleteTrafficDistributionGroup', {
             functionName: `${props.cdkAppName}-connectDeleteTrafficDistributionGroup`,
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_20_X,
             entry: 'lambdas/handlers/ConnectAPI/connectDeleteTrafficDistributionGroup.js',
             timeout: Duration.seconds(30),
             memorySize: 512,
@@ -282,7 +282,7 @@ export class ConnectAPIStack extends NestedStack {
             statements: [
                 new iam.PolicyStatement({
                     effect: iam.Effect.ALLOW,
-                    actions: ["connect:DeleteTrafficDistributionGroup"], 
+                    actions: ["connect:DeleteTrafficDistributionGroup"],
                     resources: ['*']
                 })
             ]
@@ -327,7 +327,7 @@ export class ConnectAPIStack extends NestedStack {
         const role = new iam.Role(this, 'ApiGWLogWriterRole', {
             assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com')
           })
-      
+
         const policy = new iam.PolicyStatement({
         actions: [
             'logs:CreateLogGroup',
@@ -340,9 +340,9 @@ export class ConnectAPIStack extends NestedStack {
             ],
             resources: ['*']
         })
-      
+
         role.addToPolicy(policy)
-        accessLogs.grantWrite(role) 
+        accessLogs.grantWrite(role)
 
         connectAPI.addRoutes({
             integration: new apigw2Integrations.HttpLambdaIntegration('connectListInstancesAPI', connectListInstancesLambda),
